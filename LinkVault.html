@@ -1,256 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Personal Dashboard</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-image: url('https://source.unsplash.com/1600x900/?nature,water'); /* Change this URL to customize background */
-      background-size: cover;
-      background-position: center;
-      color: #fff;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard</title>
+    <style>
+        /* General Body & Background Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding-top: 80px; /* Space for the fixed header */
+            background-color: #121212;
+            color: #ffffff;
+            background-image: url('https://images.unsplash.com/photo-1502808923298-c6427a19bce2?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 0.5s ease-in-out;
+        }
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-    }
+        /* Header & Search Bar */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 5%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
 
-    header input[type="text"] {
-      width: 70%;
-      padding: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-    }
+        #searchInput {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
-    header button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-left: 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      background-color: #28a745;
-      color: white;
-    }
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
 
-    main {
-      padding: 100px 20px 20px;
-    }
+        #searchInput:focus {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-    }
+        /* Main Content & Link Grid */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .link-card {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-    }
+        #linkGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-    .link-card a {
-      color: #00f0ff;
-      text-decoration: none;
-      font-size: 18px;
-    }
+        /* Link Card Styling */
+        .link-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .actions {
-      margin-top: 10px;
-    }
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
 
-    .actions button {
-      margin: 5px;
-      padding: 5px 10px;
-      font-size: 14px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        .link-card-content {
+            padding: 20px;
+            text-align: center;
+        }
 
-    .edit-btn {
-      background-color: #ffc107;
-      color: black;
-    }
+        .link-card-content h3 {
+            margin: 0;
+            font-size: 1.2em;
+            word-break: break-word;
+        }
 
-    .delete-btn {
-      background-color: #dc3545;
-      color: white;
-    }
+        .link-card-actions {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 0;
+        }
 
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-    }
+        .link-card-actions button {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px 10px;
+            transition: color 0.2s ease;
+        }
 
-    .modal-content {
-      background-color: white;
-      color: black;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-    }
+        .link-card-actions button:hover {
+            color: #fff;
+        }
+        
+        /* Floating Action Button (FAB) for Add Link */
+        #addLinkBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1001;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
 
-    .modal-content input {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-    }
+        #addLinkBtn:hover {
+            background-color: #0073e6;
+            transform: scale(1.1);
+        }
+        
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
 
-    .modal-content button {
-      width: 100%;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      font-size: 16px;
-    }
+        .modal-content {
+            background-color: #2a2a2a;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            position: relative;
+        }
 
-    @media (max-width: 600px) {
-      header input[type="text"] {
-        width: 60%;
-      }
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover { color: #fff; }
 
-      .modal-content {
-        width: 90%;
-      }
-    }
-  </style>
+        .modal-content h2 { margin-top: 0; }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1e90ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .modal-content button:hover { background-color: #0073e6; }
+        
+        /* Background Customization */
+        .background-customizer {
+            position: fixed;
+            top: 100px;
+            right: -250px; /* Initially hidden */
+            width: 240px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px 0 0 10px;
+            transition: right 0.3s ease-in-out;
+            z-index: 999;
+        }
+
+        .background-customizer.open {
+            right: 0;
+        }
+        
+        .customizer-toggle {
+            position: absolute;
+            left: -40px;
+            top: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px 0 0 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .background-customizer input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <input type="text" id="searchInput" placeholder="Search links..." />
-    <button onclick="openModal()">Add Link</button>
-  </header>
 
-  <main>
-    <div class="grid" id="linkGrid"></div>
-  </main>
+    <header class="header">
+        <input type="text" id="searchInput" placeholder="Search your links...">
+    </header>
 
-  <!-- Modal Form -->
-  <div class="modal" id="linkModal">
-    <div class="modal-content">
-      <h3 id="modalTitle">Add New Link</h3>
-      <input type="text" id="siteName" placeholder="Website Name" />
-      <input type="url" id="siteURL" placeholder="https://example.com" />
-      <button onclick="saveLink()">Save</button>
+    <main class="container">
+        <div id="linkGrid"></div>
+    </main>
+
+    <button id="addLinkBtn" title="Add New Link">+</button>
+
+    <div id="linkModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" title="Close">&times;</span>
+            <h2 id="modalTitle">Add New Link</h2>
+            <form id="linkForm">
+                <input type="hidden" id="linkId">
+                <label for="linkName">Name:</label>
+                <input type="text" id="linkName" required>
+                <label for="linkUrl">URL:</label>
+                <input type="url" id="linkUrl" placeholder="https://example.com" required>
+                <button type="submit" id="saveLinkBtn">Save Link</button>
+            </form>
+        </div>
     </div>
-  </div>
+    
+    <div class="background-customizer" id="bgCustomizer">
+        <div class="customizer-toggle" id="customizerToggle" title="Change Background">🎨</div>
+        <h4>Customize Background</h4>
+        <label for="bgImageUrl">Image URL:</label>
+        <input type="text" id="bgImageUrl" placeholder="Paste image URL here">
+    </div>
 
-  <script>
-    const modal = document.getElementById('linkModal');
-    const linkGrid = document.getElementById('linkGrid');
-    const siteName = document.getElementById('siteName');
-    const siteURL = document.getElementById('siteURL');
-    const modalTitle = document.getElementById('modalTitle');
-    const searchInput = document.getElementById('searchInput');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const linkGrid = document.getElementById('linkGrid');
+            const addLinkBtn = document.getElementById('addLinkBtn');
+            const linkModal = document.getElementById('linkModal');
+            const closeModalBtn = document.querySelector('.close-btn');
+            const linkForm = document.getElementById('linkForm');
+            const modalTitle = document.getElementById('modalTitle');
+            const saveLinkBtn = document.getElementById('saveLinkBtn');
+            const linkIdInput = document.getElementById('linkId');
+            const linkNameInput = document.getElementById('linkName');
+            const linkUrlInput = document.getElementById('linkUrl');
+            const searchInput = document.getElementById('searchInput');
 
-    let links = JSON.parse(localStorage.getItem('links')) || [];
-    let editIndex = null;
+            // Background Customizer Elements
+            const bgCustomizer = document.getElementById('bgCustomizer');
+            const customizerToggle = document.getElementById('customizerToggle');
+            const bgImageUrlInput = document.getElementById('bgImageUrl');
 
-    function renderLinks() {
-      linkGrid.innerHTML = '';
-      const filtered = links.filter(link =>
-        link.name.toLowerCase().includes(searchInput.value.toLowerCase())
-      );
-      filtered.forEach((link, index) => {
-        const card = document.createElement('div');
-        card.className = 'link-card';
-        card.innerHTML = `
-          <a href="${link.url}" target="_blank">${link.name}</a>
-          <div class="actions">
-            <button class="edit-btn" onclick="editLink(${index})">Edit</button>
-            <button class="delete-btn" onclick="deleteLink(${index})">Delete</button>
-          </div>
-        `;
-        linkGrid.appendChild(card);
-      });
-    }
+            // ---- Core Link Management ----
+            let links = JSON.parse(localStorage.getItem('dashboardLinks')) || [];
 
-    function openModal() {
-      modal.style.display = 'flex';
-      siteName.value = '';
-      siteURL.value = '';
-      editIndex = null;
-      modalTitle.textContent = 'Add New Link';
-    }
+            const saveLinks = () => {
+                localStorage.setItem('dashboardLinks', JSON.stringify(links));
+            };
 
-    function closeModal() {
-      modal.style.display = 'none';
-    }
+            const renderLinks = (filteredLinks = links) => {
+                linkGrid.innerHTML = '';
+                if (filteredLinks.length === 0) {
+                    linkGrid.innerHTML = `<p style="text-align: center; grid-column: 1 / -1;">No links found. Add one to get started!</p>`;
+                }
+                filteredLinks.forEach(link => {
+                    const linkCard = document.createElement('a');
+                    linkCard.href = link.url;
+                    linkCard.className = 'link-card';
+                    linkCard.target = '_blank';
+                    linkCard.rel = 'noopener noreferrer';
+                    linkCard.dataset.id = link.id;
 
-    function saveLink() {
-      const name = siteName.value.trim();
-      const url = siteURL.value.trim();
+                    linkCard.innerHTML = `
+                        <div class="link-card-content">
+                            <h3>${link.name}</h3>
+                        </div>
+                        <div class="link-card-actions">
+                            <button class="edit-btn" title="Edit">✏️</button>
+                            <button class="delete-btn" title="Delete">🗑️</button>
+                        </div>
+                    `;
+                    linkGrid.appendChild(linkCard);
+                });
+            };
 
-      if (!name || !url) {
-        alert('Please fill in both fields.');
-        return;
-      }
+            // ---- Modal Handling ----
+            const openModal = (mode = 'add', link = null) => {
+                linkForm.reset();
+                if (mode === 'edit' && link) {
+                    modalTitle.textContent = 'Edit Link';
+                    saveLinkBtn.textContent = 'Update Link';
+                    linkIdInput.value = link.id;
+                    linkNameInput.value = link.name;
+                    linkUrlInput.value = link.url;
+                } else {
+                    modalTitle.textContent = 'Add New Link';
+                    saveLinkBtn.textContent = 'Save Link';
+                    linkIdInput.value = '';
+                }
+                linkModal.style.display = 'block';
+            };
 
-      if (editIndex !== null) {
-        links[editIndex] = { name, url };
-      } else {
-        links.push({ name, url });
-      }
+            const closeModal = () => {
+                linkModal.style.display = 'none';
+            };
 
-      localStorage.setItem('links', JSON.stringify(links));
-      renderLinks();
-      closeModal();
-    }
+            // ---- Event Listeners ----
+            addLinkBtn.addEventListener('click', () => openModal('add'));
+            closeModalBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', (event) => {
+                if (event.target === linkModal) {
+                    closeModal();
+                }
+            });
 
-    function deleteLink(index) {
-      if (confirm('Are you sure you want to delete this link?')) {
-        links.splice(index, 1);
-        localStorage.setItem('links', JSON.stringify(links));
-        renderLinks();
-      }
-    }
+            linkForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = linkNameInput.value.trim();
+                const url = linkUrlInput.value.trim();
+                const id = linkIdInput.value;
 
-    function editLink(index) {
-      editIndex = index;
-      siteName.value = links[index].name;
-      siteURL.value = links[index].url;
-      modalTitle.textContent = 'Edit Link';
-      modal.style.display = 'flex';
-    }
+                if (id) { // Editing existing link
+                    const linkIndex = links.findIndex(link => link.id == id);
+                    if (linkIndex > -1) {
+                        links[linkIndex] = { ...links[linkIndex], name, url };
+                    }
+                } else { // Adding new link
+                    const newLink = {
+                        id: Date.now(),
+                        name,
+                        url: url.startsWith('http') ? url : `https://${url}`,
+                    };
+                    links.push(newLink);
+                }
 
-    // Close modal when clicking outside content
-    window.onclick = function(e) {
-      if (e.target === modal) {
-        closeModal();
-      }
-    }
+                saveLinks();
+                renderLinks();
+                closeModal();
+            });
+            
+            linkGrid.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default 'a' tag navigation
 
-    // Filter on search
-    searchInput.addEventListener('input', renderLinks);
+                const targetCard = e.target.closest('.link-card');
+                if (!targetCard) return;
 
-    // Initial render
-    renderLinks();
-  </script>
+                if (e.target.classList.contains('edit-btn')) {
+                    const linkId = targetCard.dataset.id;
+                    const linkToEdit = links.find(link => link.id == linkId);
+                    if (linkToEdit) {
+                        openModal('edit', linkToEdit);
+                    }
+                } else if (e.target.classList.contains('delete-btn')) {
+                    const linkId = targetCard.dataset.id;
+                    if (confirm('Are you sure you want to delete this link?')) {
+                        links = links.filter(link => link.id != linkId);
+                        saveLinks();
+                        renderLinks();
+                    }
+                } else {
+                    // Navigate if clicking anywhere else on the card
+                    window.open(targetCard.href, '_blank');
+                }
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredLinks = links.filter(link => link.name.toLowerCase().includes(searchTerm));
+                renderLinks(filteredLinks);
+            });
+            
+            // ---- Background Customization Logic ----
+            const applyBackground = (imageUrl) => {
+                if (imageUrl) {
+                    document.body.style.backgroundImage = `url('${imageUrl}')`;
+                    localStorage.setItem('dashboardBg', imageUrl);
+                }
+            };
+            
+            customizerToggle.addEventListener('click', () => {
+                bgCustomizer.classList.toggle('open');
+            });
+
+            bgImageUrlInput.addEventListener('change', (e) => {
+                applyBackground(e.target.value);
+            });
+
+            // ---- Initial Load ----
+            const savedBg = localStorage.getItem('dashboardBg');
+            if (savedBg) {
+                applyBackground(savedBg);
+                bgImageUrlInput.value = savedBg;
+            }
+
+            renderLinks();
+        });
+    </script>
 </body>
 </html>
